@@ -41,6 +41,20 @@ allprojects {
         maven { url "https://jitpack.io" }
         mavenCentral()
     }
+
+    // 全局配置：让所有模块优先加载自定义 framework.jar（核心）
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            // 注意：framework.jar 路径为「工程根目录/libs/framework/」，需提前创建
+            def frameworkJar = new File(rootProject.rootDir, "libs/framework/framework.jar")
+            if (frameworkJar.exists()) {
+                options.compilerArgs.add('-Xbootclasspath/p:' + frameworkJar.absolutePath)
+            }
+            // 关闭无关警告，聚焦核心编译
+            options.compilerArgs.add('-Xlint:unchecked')
+            options.compilerArgs.add('-Xlint:deprecation')
+        }
+    }
 }
 
 
