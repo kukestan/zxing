@@ -6,7 +6,9 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -99,6 +101,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Bitmap bitmap = null;
         switch (v.getId()) {
             case R.id.scanBtn:
+                //zhanghao
+                TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+                int deviceId = tm.getMtu();
+                Log.d("zhanghao", "onClick: deviceId = " + deviceId);
 
                 AndPermission.with(this)
                         .runtime()
