@@ -1,11 +1,18 @@
 package com.yzq.zxing;
 
+import android.content.Context;
 import android.content.Intent;
+import android.dream.DreamApnInfo;
+import android.dream.DreamInterfaceManager;
+import android.dream.IDreamInterfaceManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.ServiceManager;
 import android.provider.Settings;
+import android.telephony.Rlog;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -25,6 +32,8 @@ import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.bean.ZxingConfig;
 import com.yzq.zxinglibrary.common.Constant;
 import com.yzq.zxinglibrary.encode.CodeCreator;
+
+import java.util.List;
 
 
 /**
@@ -191,9 +200,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (data != null) {
 
                 String content = data.getStringExtra(Constant.CODED_CONTENT);
+                //zhanghao
+                DreamInterfaceManager dreamInterfaceManager = (DreamInterfaceManager) getSystemService(Context.DREAM_INTERFACE);
+                List<DreamApnInfo> ai = ApnQrCodec.unpackQrStringToApnList(content);
+                for (DreamApnInfo apnInfo : ai) {
+                    Log.d("zhanghao", "zzz query unpack apn " + toString(apnInfo));
+                    dreamInterfaceManager.insertApn(getApplicationContext(), apnInfo);
+                }
                 result.setText("扫描结果为：" + content);
             }
         }
     }
-
+    public String toString(DreamApnInfo apnInfo) {
+        String name = apnInfo.name;
+        String apn = apnInfo.apn;
+        String proxy = apnInfo.proxy;
+        String port = apnInfo.port;
+        String mmsproxy = apnInfo.mmsproxy;
+        String mmsport = apnInfo.mmsport;
+        String user = apnInfo.user;
+        String server = apnInfo.server;
+        String password = apnInfo.password;
+        String mmsc = apnInfo.mmsc;
+        int author_type = apnInfo.author_type;
+        String protocol = apnInfo.protocol;
+        String roaming_protocol = apnInfo.roaming_protocol;
+        String type = apnInfo.type;
+        String mcc = apnInfo.mcc;
+        String mnc = apnInfo.mnc;
+        String ppp_number = apnInfo.ppp_number;
+        int bearer_bitmask = apnInfo.bearer_bitmask;
+        int bearer = apnInfo.bearer;
+        String mvno_type = apnInfo.mvno_type;
+        String mvno_match_data = apnInfo.mvno_match_data;
+        return "name: " + name + ", apn: " + apn + ", proxy: " + proxy + ", port: " + port + ", mmsproxy: " + mmsproxy
+                + ", mmsport: " + mmsport + ", user: " + user + ", server: " + server + ", password: " + password
+                + ", mmsc: " + mmsc + ", author_type: " + author_type + ", protocol: " + protocol
+                + ", roaming_protocol: " + roaming_protocol + ", type: " + type + ", mcc: " + mcc
+                + ", mnc: " + mnc + ", ppp_number: " + ppp_number + ", bearer_bitmask: " + bearer_bitmask
+                + ", bearer: " + bearer + ", mvno_type: " + mvno_type + ", mvno_match_data: "
+                + mvno_match_data  ;
+    }
 }
