@@ -14,7 +14,9 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
-
+    // 禁用 androidTest 资源, 避免全编的时候出现错误
+    testBuildType = "debug"
+    android.testBuildType = "debug"
 }
 
 dependencies {
